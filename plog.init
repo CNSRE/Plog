@@ -1,0 +1,69 @@
+#!/bin/bash
+# Source function library.
+# chkconfig: 2345 10 90 
+# description: plog ....
+
+. /etc/rc.d/init.d/functions
+
+base_dir=/home/xxxx/project/Plog
+prog=plog
+plog="python ${base_dir}/plog.py"
+CONFIG=${base_dir}/${prog}.conf
+pid_file=/var/run/${prog}.pid
+RETVAL=0
+
+
+get_pid() 
+{
+    cat "$pid_file"
+}
+
+is_running()
+{
+    [ -f "$pid_file" ] && ps `get_pid` > /dev/null 2>&1
+}
+
+start() 
+{
+        echo -n $"Starting ${prog}:  "
+        ${plog} -c ${CONFIG} &
+        pid=$!
+        RETVAL=$?
+        echo $! > $pid_file
+        if ! is_running; then
+            failure
+        else
+            success
+        fi
+        echo
+        return $RETVAL
+}
+
+stop() 
+{
+        echo -n $"Stopping ${prog}: "
+        killproc -p ${pid_file} ${prog}
+        RETVAL=$?
+        echo
+}
+# See how we were called.
+case "$1" in
+  start)
+        start
+        ;;
+  stop)
+        stop
+        ;;
+  status)
+        status -p ${pid_file} ${prog}
+        RETVAL=$?
+        ;;
+  restart)
+        stop
+        start
+        ;;
+  *)
+        echo $"Usage: ${prog} {start|stop|restart|status}"
+        RETVAL=2
+esac
+exit $RETVAL
