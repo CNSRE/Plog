@@ -54,6 +54,11 @@ logging_filename=/tmp/plog.log
 
 具体实例如下:
 
+在$Plog_HOME/conf/plog.conf中指定使用grok channel模块，并添加相应日志解析的grok pattern。比如像下面这样：
+channel_module=grok_channel
+channel_filter_grok=%{HOSTNAME}\s%{DATA}\s%{NUMBER:response_time}\s%{WORD}\s\[.*\]\s\".*\"\s%{WORD:response_code}
+
+同样你也可以添加自定义的grok pattern。你只需要在$Plog_HOME/channel/pygrok/pattern/中添加自己的grok文件。
 
 <pre>
 source_module=self-define-script-name
@@ -66,6 +71,10 @@ source_module=self-define-script-name
 channel_module=filter_log
 </pre>
 同样的你需要实现的channel可以参见 **plog/channel/youself_define_channel.py**
+
+这里实现了另外的一个grok channel模块，底层调用的是pygrok库，如果你对logstash比较熟悉，那么你应该可以比较灵活的使用Plog的grok channel。但在此之前你要确保你的系统已经安装了regex模块。
+
+channel模块的使用：
 
 
 #### sink 部分
@@ -94,3 +103,4 @@ xxxx test123_200 59.000000
 xxxx test123_500 0.000000
 xxxx test123_400 0.000000
 </pre>
+
