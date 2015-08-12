@@ -52,9 +52,6 @@ logging_filename=/tmp/plog.log
 
 在这一部分，我们需要处理的是数据流的来源，他可能是file，可能是socket，可能是管道，但是我不关注你的数据来源格式是什么样的，因为我无法满足这些需要各式各样的数据来源需求，而你的需要是什么样的，你最清楚，那么你只要写一个**source**的插件就可以了,名字随意你定，你需要的是把你写的那个插件的名字，写到**plog.conf**里面，默认有读取文件的file_source模块，读取管道的read_from_pipeline模块，可以直接使用。
 
-具体实例如下:
-
-
 <pre>
 source_module=self-define-script-name
 </pre>
@@ -67,6 +64,14 @@ channel_module=filter_log
 </pre>
 同样的你需要实现的channel可以参见 **plog/channel/youself_define_channel.py**
 
+**grok_channel**
+
+这里实现了另外的一个grok channel模块，底层调用的是pygrok库，如果你对logstash比较熟悉，那么你应该可以比较灵活的使用Plog的grok channel。但在此之前你要确保你的系统已经安装了regex模块。在$Plog_HOME/conf/plog.conf中指定使用grok channel模块，并添加相应日志解析的grok pattern。比如像下面这样：
+
+<pre>
+channel_module=grok_channel
+channel_filter_grok=%{HOSTNAME}\s%{DATA}\s%{NUMBER:response_time}\s%{WORD}\s\[.*\]\s\".*\"\s%{WORD:response_code}
+</pre>
 
 #### sink 部分
 在这个部分，你同样需要写一个Python脚本，他的名字同样取决于你的个人喜好，你需要的是把你写的那个插件的名字写到**plog.conf**，例如下方:
@@ -94,3 +99,4 @@ xxxx test123_200 59.000000
 xxxx test123_500 0.000000
 xxxx test123_400 0.000000
 </pre>
+
