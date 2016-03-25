@@ -6,22 +6,22 @@ import commands
 
 class sink(sink_base):
 
-    def __init__(self,sink_dict):
+    def __init__(self, sink_dict):
 
-        self.service            = sink_dict['sink_service']
-        self.send_dict          = dict.fromkeys(sink_dict['sink_zabbix_monitor_keys'].split(','),0)
+        self.service = sink_dict['sink_service']
+        self.send_dict = dict.fromkeys(sink_dict['sink_zabbix_monitor_keys'].split(','),0)
         
-        self.zabbix_send_file   = "_".join((sink_dict['sink_zabbix_send_file'],self.service))
-        self.zabbix_sender      = sink_dict['sink_zabbix_sender']
-        self.zabbix_conf        = sink_dict['sink_zabbix_conf']
+        self.zabbix_send_file = "_".join((sink_dict['sink_zabbix_send_file'],self.service))
+        self.zabbix_sender = sink_dict['sink_zabbix_sender']
+        self.zabbix_conf = sink_dict['sink_zabbix_conf']
 
-        self.dealed_total       = 0
+        self.dealed_total = 0
     
-    def calculate_item(self,item):
+    def calculate_item(self, item):
 
-        response_code   = item['response_code']
-        response_time   = int(item['response_time'])
-        sum_key_list=[response_code]
+        response_code = item['response_code']
+        response_time = int(item['response_time'])
+        sum_key_list = [response_code]
 
         #the key like cachel2get_200
         try:
@@ -32,12 +32,12 @@ class sink(sink_base):
     
     def deal_sink(self):
         import platform
-        hostname=platform.uname()[1]
+        hostname = platform.uname()[1]
         with open(self.zabbix_send_file,"w") as file_handle:
             for key in  self.send_dict:
-                info="%s %s_%s %f\n" % (hostname,self.service,str(key),self.send_dict[key])
+                info="%s %s_%s %f\n" % (hostname, self.service, str(key), self.send_dict[key])
                 file_handle.write(info)
                 self.send_dict[key]=0
 
-        cmd="%s -c %s -i %s" % (self.zabbix_sender,self.zabbix_conf,self.zabbix_send_file)
-        status,output=commands.getstatusoutput(cmd)
+        cmd = "%s -c %s -i %s" % (self.zabbix_sender, self.zabbix_conf, self.zabbix_send_file)
+        status,output = commands.getstatusoutput(cmd)

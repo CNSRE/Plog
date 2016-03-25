@@ -29,9 +29,9 @@ if __name__ == "__main__":
                 print "there is not  config_file ,you should creat_cfg first,refer to https://github.com/xluren/Plog"
                 sys.exit(1)
             else:
-                config_file=options.config_filename
+                config_file = options.config_filename
         except:
             print "read config error,check it exists or not,refer to https://github.com/xluren/Plog"
             sys.exit(1)
 
-    run(config_file=config_file,debug=False)
+    run(config_file = config_file, debug=False)
