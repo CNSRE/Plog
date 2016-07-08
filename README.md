@@ -84,7 +84,7 @@ sink_module=cacheL2get_monitor
 #### 如何跑一个测试
 下面的测试是读取一个本地本件，解析，计算自己要想的结果发送到zabbix监控系统。
 <pre>
-1.git clone https://github.com/SinaMSRE/Plog.git
+1.git clone https://github.com/CNSRE/Plog.git
 
 2.cd ./Plog/test 
 
