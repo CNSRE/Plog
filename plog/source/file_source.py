@@ -27,7 +27,6 @@ class source(source_base):
             file_handle.seek(0,2)
             while 1:
                 line_list = file_handle.readlines()
-                
                 if not line_list:
                     file_inode_now = self.get_file_inode()
                     if file_inode_now != self.file_inode:

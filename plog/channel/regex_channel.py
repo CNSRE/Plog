@@ -19,7 +19,6 @@ class channel(channel_base):
             try:
                 match=self.pattern.match(line)
                 if match:
-		    print("parse:%s" %match.groupdict())
                     self.dict_queue.put(match.groupdict())
                 else :
                     pass
